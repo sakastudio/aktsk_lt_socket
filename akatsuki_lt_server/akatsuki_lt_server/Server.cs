@@ -10,45 +10,38 @@ namespace akatsuki_lt_server
         public static void Main(string[] args)
         {
             //エンドポイントの設定
-            var endpoint = new IPEndPoint(IPAddress.Any, 19564);
-            //サーバーソケットの作成
-            var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            var endpooint = new IPEndPoint(IPAddress.Any, 19564);
+            //サーバーの作成
+            var server = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
             int bufferSize = 1024;
             
-            //エンドポイントを関連づける
-            server.Bind(endpoint);
-            //接続待ち状態にする
-            //引数は接続待ちの最大数
-            server.Listen(10);
-            Console.WriteLine("Starting server...");
+            //エンドポイントの設定
+            server.Bind(endpooint);
             
+            server.Listen(10);
+            Console.WriteLine("接続待ち");
+
             while (true)
             {
-                //接続要求があったら受け付ける
                 Socket handler = server.Accept();
-                Console.WriteLine("Connection");
+                Console.WriteLine("接続完了");
                 var bytes = new byte[bufferSize];
                 while (true)
                 {
-                    //データを受け取る
                     var size = handler.Receive(bytes);
-                    var str = Encoding.UTF8.GetString(bytes, 0, size);
-                    //データがなかったら接続を閉じる
-                    if (size == 0)
+                    if (size ==0)
                     {
                         handler.Shutdown(SocketShutdown.Both);
                         handler.Close();
-                        Console.WriteLine("Connection Close");
+                        Console.WriteLine("切断");
                         break;
                     }
-                    //データを表示
+
+                    var str = Encoding.UTF8.GetString(bytes, 0, size);
                     Console.WriteLine(str);
-                    //大文字に変換
                     str = str.ToUpper();
-                    //データを送信する
                     handler.Send(Encoding.UTF8.GetBytes(str));
                 }
-                
             }
         }
     }
