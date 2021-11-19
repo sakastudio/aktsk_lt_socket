@@ -1,9 +1,6 @@
-
-# -*- coding : UTF-8 -*-
-
-# 0.ライブラリのインポートと変数定義
 import socket
 
+# 接続先の設定
 target_ip = "127.0.0.1"
 target_port = 19564
 buffer_size = 4096
